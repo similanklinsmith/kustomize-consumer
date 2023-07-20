@@ -22,14 +22,16 @@ postgres:
 kafka:
   address:
     - kafka.poc.internal:9092
-  topic: deep-user-topic
+  topic: 
+    - deep-user-topic
   consume-group: deep-user-consumer-group
-
-user-list-key: DEEP_USER_LIST
 
 redis:
   address: 172.28.241.3:6379
   database: 1
+  authString: 92008bf3-478e-4aaf-9a41-007423d8bfb6
+
+user-list-key: DEEP_USER_LIST
 
 
 
