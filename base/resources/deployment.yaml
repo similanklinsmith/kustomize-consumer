@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: deep-user-consumer
+  labels:
+    app.kubernetes.io/name: deep-user-consumer
+    app.kubernetes.io/instance: deep-user-consumer
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: deep-user-consumer
+      app.kubernetes.io/instance: deep-user-consumer
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: deep-user-consumer
+        app.kubernetes.io/instance: deep-user-consumer
+    spec:
+      containers:
+        - name: deep-user-consumer
+          image: asia.gcr.io/poc-innovation-iot/deep-user-consumer:TAG
+          imagePullPolicy: IfNotPresent
+          envFrom:
+            - secretRef:
+                name: deep-user-consumer-secret-env
+          volumeMounts:
+              - mountPath: /config/config.yaml
+                name: deep-user-consumer-configmap-file
+                subPath: config.yaml
+          ports:
+            - name: http
+              containerPort: 8080
+              protocol: TCP
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            timeoutSeconds: 10
+            initialDelaySeconds: 10
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            timeoutSeconds: 10
+            initialDelaySeconds: 10
+          resources:
+            limits:
+              cpu: 64m
+              memory: 64Mi
+            requests:
+              cpu: 32m
+              memory: 32Mi
+      volumes:
+        - name: deep-user-consumer-secret-file
+          secret:
+            secretName: deep-user-consumer-secret-file
+        - name: deep-user-consumer-configmap-file
+          configMap:
+            name: deep-user-consumer-configmap-file

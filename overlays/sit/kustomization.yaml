@@ -1,0 +1,24 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../../base
+
+namespace: deep-training
+
+images:
+- name: asia.gcr.io/poc-innovation-iot/deep-user-consumer
+  newTag: 6d87207c
+
+
+configMapGenerator:
+- behavior: merge
+  files:
+  - configs/config.yaml
+  name: deep-user-consumer-configmap-file
+
+secretGenerator:
+- behavior: merge
+  envs:
+  - secrets/secret.env
+  name: deep-user-consumer-secret-env
